@@ -1,11 +1,11 @@
-# DfuBootloader
+# DFU Bootloader
 
 This repository contains a generic USB device bootloader firmware for STM32 controllers.
 
 ## Features
 
 * Fully-featured DFU class (with support to STMicroelectronics protocol Extension) USB device
-* Small footprint: consumes only 8kB flash
+* Small footprint: consumes only 8kB flash with `-Os`
 * The DFU interface is passed over to the application, so it can be mounted on the application's USB device,
   allowing convenient entry to firmware update mode
 * Easy to port on virtually any STM32 device that is supported by [STM32_XPD][STM32_XPD]
@@ -20,7 +20,7 @@ This firmware relies on the following external sources:
 
 | Symbol Name                     | [DFUSE][DFUSE] only | Use
 | :------------------------------ | :-: | :------------------------
-| `STM32_TARGET_HEADER`           |     | String of the device-specific STM32_XPD header, e.g. `"stm32f042x6.h"`
+| `STM32_TARGET_HEADER`           |     | String of the device-specific *STM32_XPD* header, e.g. `"stm32f042x6.h"`
 | `FLASH_APP_ADDRESS`             |     | Value of the application's flash start address
 | `FLASH_APP_SIZE`                |     | The total available flash space for the application in bytes
 | `FLASH_BYTE_PROGRAM_TIME_us`    |     | Average flash programming time of a byte
@@ -32,7 +32,7 @@ This firmware relies on the following external sources:
 | `VDD_VALUE_mV`                  |     | Power supply voltage value in mV
 | `SE_FLASH_DESC_STR`             | x   | DFUSE specific flash layout descriptor string
 
-Built with GCC ARM tools (requires `-Os` compiler option to fit in FLASH).
+Built with GCC ARM tools.
 
 [STM32_XPD]: https://github.com/IntergatedCircuits/STM32_XPD
 [USBDevice]: https://github.com/IntergatedCircuits/USBDevice
