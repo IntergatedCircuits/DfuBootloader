@@ -165,6 +165,19 @@ static int FlashIf_AppHeaderValid(void)
 }
 
 /**
+ * @brief Checks if the application manifest signature is valid.
+ * @return TRUE if application signature is valid, FALSE otherwise
+ */
+static int FlashIf_AppSignValid(void)
+{
+    /* The last word of the application is set to fixed value during manifestation */
+    uint32_t* flashEnd = ((uint32_t*)(FLASH_BASE
+            + (DEVICE_FLASH_SIZE_kB << 10) - sizeof(FLASH_VALID_SYMBOL)));
+
+    return (*flashEnd == FLASH_VALID_SYMBOL);
+}
+
+/**
  * @brief Writes a validity signature to the end of the flash to indicate upgrade success.
  * @return Result of the flash program operation
  */
@@ -177,6 +190,10 @@ static USBD_DFU_StatusType FlashIf_Manifest(void)
     if (!FlashIf_AppHeaderValid())
     {
         retval = DFU_ERROR_VERIFY;
+    }
+    else if (FlashIf_AppSignValid())
+    {
+        /* Skip rewrite of manifest */
     }
     else if (XPD_OK != FLASH_eProgram(addr,
             (const uint8_t*)&manifSign, sizeof(manifSign)))
@@ -192,12 +209,7 @@ static USBD_DFU_StatusType FlashIf_Manifest(void)
  */
 int FlashIf_ApplicationPresent(void)
 {
-    /* The last word of the application is set to fixed value during manifestation */
-    uint32_t* flashEnd = ((uint32_t*)(FLASH_BASE
-            + (DEVICE_FLASH_SIZE_kB << 10) - sizeof(FLASH_VALID_SYMBOL)));
-
-    return (FlashIf_AppHeaderValid() &&
-            (*flashEnd == FLASH_VALID_SYMBOL));
+    return (FlashIf_AppHeaderValid() && FlashIf_AppSignValid());
 }
 
 const USBD_DFU_AppType hflash_if = {
