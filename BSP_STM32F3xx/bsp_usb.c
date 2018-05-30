@@ -36,6 +36,7 @@ void BSP_USB_Bind(USB_HandleType *dev)
 {
     GPIO_vInitPin(USB_DM_PIN, USB_DM_CFG);
     GPIO_vInitPin(USB_DP_PIN, USB_DP_CFG);
+    GPIO_vInitPin(USB_CONNECT_PIN, USB_CONNECT_CFG);
     USB_INST2HANDLE(dev, USB);
     dev->Callbacks.ConnectCtrl = usbAttachDetach;
 }
