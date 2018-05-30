@@ -23,7 +23,11 @@
 #include <bsp_usb.h>
 #include <bsp_io.h>
 
-static void usbConnect(FunctionalState state)
+/* This STM32 line doesn't have built-in DP pull-up,
+ * therefore an external 1.5kOhm resistor must be placed between USB DP
+ * and a GPIO pin.
+ */
+static void usbAttachDetach(FunctionalState state)
 {
     GPIO_vWritePin(USB_CONNECT_PIN, state);
 }
@@ -33,5 +37,5 @@ void BSP_USB_Bind(USB_HandleType *dev)
     GPIO_vInitPin(USB_DM_PIN, USB_DM_CFG);
     GPIO_vInitPin(USB_DP_PIN, USB_DP_CFG);
     USB_INST2HANDLE(dev, USB);
-    dev->Callbacks.ConnectCtrl = usbConnect;
+    dev->Callbacks.ConnectCtrl = usbAttachDetach;
 }
