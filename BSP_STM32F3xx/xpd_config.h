@@ -29,6 +29,5 @@
 #ifndef VDD_VALUE_mV
 #define VDD_VALUE_mV        2000
 #endif
-#define VDDA_VALUE_mV       VDD_VALUE_mV
 
 #endif /* XPD_CONFIG_H_ */
