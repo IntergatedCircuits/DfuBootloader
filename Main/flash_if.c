@@ -229,6 +229,6 @@ const USBD_DFU_AppType hflash_if = {
 #else
     .Erase              = FlashIf_Erase,
     .GetTimeout_ms      = FlashIf_GetTimeout_ms,
-    .Name               = "Device Flash DFU",
+    .Name               = "DFU Bootloader",
 #endif
 }, *const flash_if = &hflash_if;

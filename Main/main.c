@@ -39,7 +39,7 @@ const USBD_DescriptionType hdev_cfg = {
     .Product = {
             .Name           = "DFU Bootloader",
             .ID             = USBD_PID,
-            .Version        = {{ 0,1 }},
+            .Version.bcd    = 0x0100,
     },
     .SerialNumber = (USBD_SerialNumberType*)DEVICE_ID_REG,
     .Config = {
