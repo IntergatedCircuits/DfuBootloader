@@ -33,5 +33,9 @@ void BSP_USB_Bind(USB_HandleType *dev)
 #else
     USB_vClockConfig(USB_CLOCKSOURCE_MSI);
 #endif
+#if defined(USB)
+    USB_INST2HANDLE(dev, USB);
+#elif defined(USB_OTG_FS)
     USB_INST2HANDLE(dev, USB_OTG_FS);
+#endif
 }
