@@ -27,6 +27,7 @@
 static const RCC_PLL_InitType pllconf = {
     .State = ENABLE,
     .Source = HSE,
+    .Predivider = 1,
     .Multiplier = 72000000 / HSE_VALUE_Hz /* SYSCLK = 72000000 */
 };
 
