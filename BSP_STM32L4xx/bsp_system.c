@@ -36,17 +36,6 @@ static const RCC_MSI_InitType msiconf = {
     .State = ENABLE
 };
 
-static const RCC_PLL_InitType pllconf = {
-    .State = ENABLE,
-    .Source = MSI,
-    .M = 6,
-    .N = 20,
-    .R = 2, /* MSI / 6 * 20 / 2 = PLLR = 80000000 -> SYSCLK */
-
-    .Q = 2,
-    .P = 7
-};
-
 /* System clocks configuration */
 void SystemClock_Config(void)
 {
@@ -57,17 +46,17 @@ void SystemClock_Config(void)
     RCC_eLSE_Config(OSC_ON);
 #endif
 
-    RCC_ePLL_Config(&pllconf);
-
 #ifdef RCC_HSI48_SUPPORT
     /* HSI48 configuration */
     RCC_eHSI48_Enable();
     CRS_vInit(&crsSetup);
 #endif
 
-    /* System clocks configuration */
-    RCC_eHCLK_Config(PLL, CLK_DIV1, 4);
+    /* System clocks configuration is the default, optimize calls */
+#if 0
+    RCC_eHCLK_Config(MSI, CLK_DIV1, 2);
 
     RCC_vPCLK1_Config(CLK_DIV1);
     RCC_vPCLK2_Config(CLK_DIV1);
+#endif
 }
