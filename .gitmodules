@@ -1,0 +1,6 @@
+[submodule "USBDevice"]
+	path = USBDevice
+	url = https://github.com/IntergatedCircuits/USBDevice
+[submodule "STM32_XPD"]
+	path = STM32_XPD
+	url = https://github.com/IntergatedCircuits/STM32_XPD

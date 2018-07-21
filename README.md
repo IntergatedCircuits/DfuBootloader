@@ -6,15 +6,9 @@ This repository contains a generic USB device bootloader firmware for STM32 cont
 
 * Fully-featured DFU class (with support to STMicroelectronics protocol Extension) USB device
 * Small footprint: consumes only 8kB flash with `-Os` (50% smaller than the *STM32Cube* solution)
-* The DFU interface is passed over to the application, so it can be mounted on the application's USB device,
+* The DFU interface is allocated to a fixed address, so it can be mounted on the application's USB device,
   allowing convenient entry to firmware update mode
 * Easy to port on virtually any STM32 device that is supported by [STM32_XPD][STM32_XPD]
-
-## External dependencies
-
-This firmware relies on the following external sources:
-1. The **CMSIS** and **STM32xx_XPD** libraries are imported from [STM32_XPD][STM32_XPD]
-2. The USB device and DFU class library is imported from [USBDevice][USBDevice]
 
 ## Necessary build defines
 
