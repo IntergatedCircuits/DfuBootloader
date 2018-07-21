@@ -1,4 +1,5 @@
 # DFU Bootloader
+[![Build Status](https://travis-ci.org/IntergatedCircuits/DfuBootloader.svg?branch=master)](https://travis-ci.org/IntergatedCircuits/DfuBootloader)
 
 This repository contains a generic USB device bootloader firmware for STM32 controllers.
 
