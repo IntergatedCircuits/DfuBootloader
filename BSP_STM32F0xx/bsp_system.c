@@ -21,24 +21,41 @@
   * limitations under the License.
   */
 #include <bsp_system.h>
-
 #include <xpd_rcc.h>
+#ifdef RCC_HSI48_SUPPORT
 #include <xpd_crs.h>
 
 static const CRS_InitType crsSetup = {
     .Source     = CRS_SYNC_SOURCE_USB,
     .ErrorLimit = CRS_ERRORLIMIT_DEFAULT,
 };
+#else
+
+static const RCC_PLL_InitType pllconf = {
+    .State = ENABLE,
+    .Source = HSE,
+    .Predivider = 1,
+    .Multiplier = 48000000 / HSE_VALUE_Hz
+};
+#endif
 
 /* System clocks configuration */
 void SystemClock_Config(void)
 {
+#ifdef RCC_HSI48_SUPPORT
     /* HSI48 configuration */
     RCC_eHSI48_Enable();
     CRS_vInit(&crsSetup);
 
     /* System clocks configuration */
     RCC_eHCLK_Config(HSI48, CLK_DIV1, 1);
+#else
+    RCC_eHSE_Config(OSC_ON);
+    RCC_ePLL_Config(&pllconf);
+
+    /* System clocks configuration */
+    RCC_eHCLK_Config(PLL, CLK_DIV1, 1);
+#endif
 
     RCC_vPCLK1_Config(CLK_DIV1);
 }
