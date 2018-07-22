@@ -1,3 +1,4 @@
+# Credits for the build setup go to https://github.com/Jumperr-labs
 sudo: required
 
 language: ruby
@@ -9,4 +10,7 @@ before_install:
 - docker pull jumperio/vlab-gcc-arm:latest
 
 script:
-- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker
+- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f072xb.h\>" SERIES=STM32F0 APP_ADDRESS=0x08002000 APP_SIZE=122872 TOTAL_ERASE_MS=4000 VID=FFFF PID=F0
+- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f302xc.h\>" SERIES=STM32F3 APP_ADDRESS=0x08002000 APP_SIZE=122872 TOTAL_ERASE_MS=4000 VID=FFFF PID=F3 HSE_HZ=12000000
+- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f407xx.h\>" SERIES=STM32F4 APP_ADDRESS=0x08004000 APP_SIZE=1032184 TOTAL_ERASE_MS=16000 VID=FFFF PID=F4 VDD_MV=3000 HSE_HZ=8000000
+- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32l476xx.h\>" SERIES=STM32L4 APP_ADDRESS=0x08002000 APP_SIZE=1032184 TOTAL_ERASE_MS=12000 VID=FFFF PID=14

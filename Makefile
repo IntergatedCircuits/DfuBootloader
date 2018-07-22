@@ -2,15 +2,6 @@
 ##++----  Makefile for DfuBootloader project   ----++##
 ########+++++++++++++++++++++++++++++++++++++++########
 
-# TODO move to command line
-SERIES = STM32F0
-APP_ADDRESS = 0x08002000
-APP_SIZE = 24568
-TOTAL_ERASE_MS = 480
-VID = 0xFFFF
-PID = 0xFFFF
-TARGET_HEADER = "<stm32f042x6.h>"
-
 # optimization
 OPT = -Os
 DEBUG = 0
@@ -18,7 +9,7 @@ DEBUG = 0
 TARGET = DfuBootloader
 
 # Build path
-BUILD_DIR = build
+BUILD_DIR = build_$(VID)_$(PID)
 
 
 ##++----  Target configuration  ----++##
@@ -28,7 +19,7 @@ CORE = m0plus
 else ifeq ($(SERIES),STM32F0)
 CORE = m0
 PROGRAM_US = 30
-ERASE_MS = 2
+ERASE_MS = 30
 else ifeq ($(SERIES),STM32F1)
 CORE = m3
 else ifeq ($(SERIES),STM32L1)
@@ -37,10 +28,16 @@ else ifeq ($(SERIES),STM32F2)
 CORE = m3
 else ifeq ($(SERIES),STM32F3)
 CORE = m4
+PROGRAM_US = 30
+ERASE_MS = 30
 else ifeq ($(SERIES),STM32F4)
 CORE = m4
+PROGRAM_US = 25
+ERASE_MS = 2000
 else ifeq ($(SERIES),STM32L4)
 CORE = m4
+PROGRAM_US = 10
+ERASE_MS = 25
 else ifeq ($(SERIES),STM32F7)
 CORE = m7
 else ifeq ($(SERIES),STM32H7)
@@ -54,29 +51,29 @@ else
 endif
 
 # safe default values
-ifndef BSP
 BSP = BSP_$(SERIES)xx
-endif
-ifndef VDD_MV
 VDD_MV = 2000
-endif
 
 C_DEFS =  \
 -DFLASH_APP_ADDRESS=$(APP_ADDRESS) \
 -DFLASH_APP_SIZE=$(APP_SIZE) \
 -DFLASH_BYTE_PROGRAM_TIME_us=$(PROGRAM_US) \
--DUSBD_VID=$(VID) \
--DUSBD_PID=$(PID) \
+-DUSBD_VID=0x$(VID) \
+-DUSBD_PID=0x$(PID) \
 -DVDD_VALUE_mV=$(VDD_MV) \
 -DSTM32_TARGET_HEADER=$(TARGET_HEADER)
+
+ifdef HSE_HZ
+C_DEFS += -DHSE_VALUE_Hz=$(HSE_HZ)
+endif
 
 ifdef DFUSE
 C_DEFS += \
 -DUSBD_DFU_ST_EXTENSION=$(DFUSE) \
--DFLASH_ERASE_TIME_ms=$(ERASE_MS) 
+-DFLASH_ERASE_TIME_ms=$(ERASE_MS) \
+-DSE_FLASH_DESC_STR=DESC_STR
 else
-C_DEFS += \
--DFLASH_TOTAL_ERASE_TIME_ms=$(TOTAL_ERASE_MS)
+C_DEFS += -DFLASH_TOTAL_ERASE_TIME_ms=$(TOTAL_ERASE_MS)
 endif
 
 ##++----  Build tool binaries  ----++##
@@ -109,12 +106,16 @@ ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffuncti
 ##++----  Compiler  ----++##
 C_STANDARD = -std=gnu11
 
+# All USBDevice classes are built, but only DFU is used
 # C includes
 C_INCLUDES =  \
 -I$(BSP) \
 -IMain \
 -IUSBDevice/Device \
+-IUSBDevice/Class/CDC \
 -IUSBDevice/Class/DFU \
+-IUSBDevice/Class/HID \
+-IUSBDevice/Class/MSC \
 -ISTM32_XPD/CMSIS/Include \
 -IUSBDevice/PDs/STM32_XPD \
 -ISTM32_XPD/CMSIS/Device/ST/$(SERIES)xx/Include \
@@ -125,7 +126,10 @@ C_SOURCES =  \
 $(wildcard $(BSP)/*.c) \
 $(wildcard Main/*.c) \
 $(wildcard USBDevice/Device/Src/*.c) \
+$(wildcard USBDevice/Class/CDC/Src/*.c) \
 $(wildcard USBDevice/Class/DFU/Src/*.c) \
+$(wildcard USBDevice/Class/HID/Src/*.c) \
+$(wildcard USBDevice/Class/MSC/Src/*.c) \
 $(wildcard STM32_XPD/$(SERIES)_XPD/src/*.c)
 
 # compiler flags
@@ -151,7 +155,7 @@ LDFLAGS = $(MCU) -specs=nano.specs -T$(LDSCRIPT) $(LIBDIR) $(LIBS) -Wl,-Map=$(BU
 
 ##++----  Build the application  ----++##
 # default action: build all
-all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex $(BUILD_DIR)/$(TARGET).bin
+all: $(BUILD_DIR)/$(TARGET).elf $(BUILD_DIR)/$(TARGET).hex
 
 # list of objects
 OBJECTS = $(addprefix $(BUILD_DIR)/,$(notdir $(C_SOURCES:.c=.o)))
@@ -172,9 +176,6 @@ $(BUILD_DIR)/$(TARGET).elf: $(OBJECTS) Makefile
 
 $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
 	$(HEX) $< $@
-
-$(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf | $(BUILD_DIR)
-	$(BIN) $< $@
 
 $(BUILD_DIR):
 	mkdir $@
