@@ -28,6 +28,12 @@ void BSP_USB_Bind(USB_HandleType *dev)
     /* Only necessary for low pin count devices */
     GPIO_PIN_REMAP(PA11_PA12);
 
+#ifdef RCC_HSI48_SUPPORT
+    USB_vClockConfig(USB_CLOCKSOURCE_HSI48);
+#else
+    USB_vClockConfig(USB_CLOCKSOURCE_PLL);
+#endif
+
     GPIO_vInitPin(USB_DM_PIN, USB_DM_CFG);
     GPIO_vInitPin(USB_DP_PIN, USB_DP_CFG);
     USB_INST2HANDLE(dev, USB);
