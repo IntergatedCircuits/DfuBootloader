@@ -79,8 +79,7 @@ static uint16_t SE_FlashIf_GetTimeout_ms(uint8_t *addr, uint32_t len)
 }
 
 #else
-#define FLASH_ERASE_SIZE_kB       /* Entire application (in kB) */\
-    (DEVICE_FLASH_SIZE_kB - ((FLASH_APP_ADDRESS - FLASH_BASE) >> 10))
+#define FLASH_ERASE_SIZE_kB ((FLASH_APP_SIZE) >> 10) /* Entire application (in kB) */
 
 /**
  * @brief Erase entire application firmware
@@ -161,7 +160,7 @@ static int FlashIf_AppHeaderValid(void)
 
     return (((stackEnd & 0xFFF007FF) == 0x20000000) &&
             (resetVector > (FLASH_APP_ADDRESS)) &&
-            (resetVector < (FLASH_BASE + (DEVICE_FLASH_SIZE_kB << 10) - sizeof(manifSign))));
+            (resetVector < (FLASH_BASE + FLASH_APP_SIZE - sizeof(manifSign))));
 }
 
 /**
@@ -171,8 +170,8 @@ static int FlashIf_AppHeaderValid(void)
 static int FlashIf_AppSignValid(void)
 {
     /* The last word of the application is set to fixed value during manifestation */
-    uint32_t* flashEnd = ((uint32_t*)(FLASH_BASE
-            + (DEVICE_FLASH_SIZE_kB << 10) - sizeof(FLASH_VALID_SYMBOL)));
+    uint32_t* flashEnd = ((uint32_t*)(FLASH_BASE + FLASH_APP_SIZE
+            - sizeof(FLASH_VALID_SYMBOL)));
 
     return (*flashEnd == FLASH_VALID_SYMBOL);
 }
@@ -214,7 +213,7 @@ int FlashIf_ApplicationPresent(void)
 
 const USBD_DFU_AppType hflash_if = {
     .Firmware.Address   = FLASH_APP_ADDRESS,
-    .Firmware.TotalSize = FLASH_APP_SIZE,
+    .Firmware.TotalSize = FLASH_APP_SIZE - sizeof(manifSign),
 
     .Init               = FLASH_vUnlock,
     .Deinit             = FLASH_vLock,
