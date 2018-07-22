@@ -67,6 +67,10 @@ ifdef HSE_HZ
 C_DEFS += -DHSE_VALUE_Hz=$(HSE_HZ)
 endif
 
+ifdef DP_PIN
+C_DEFS += -DUSB_CONNECT_PIN=$(DP_PIN)
+endif
+
 ifdef DFUSE
 C_DEFS += \
 -DUSBD_DFU_ST_EXTENSION=$(DFUSE) \
