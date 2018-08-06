@@ -11,7 +11,6 @@ TARGET = DfuBootloader
 # Build path
 BUILD_DIR = build_$(VID)_$(PID)
 
-
 ##++----  Target configuration  ----++##
 
 ifeq ($(SERIES),STM32L0)
@@ -110,31 +109,34 @@ ASFLAGS = $(MCU) $(AS_DEFS) $(AS_INCLUDES) $(OPT) -Wall -fdata-sections -ffuncti
 ##++----  Compiler  ----++##
 C_STANDARD = -std=gnu11
 
+XPD_DIR = STM32_XPD
+USBD_DIR = USBDevice
+
 # All USBDevice classes are built, but only DFU is used
 # C includes
 C_INCLUDES =  \
 -I$(BSP) \
 -IMain \
--IUSBDevice/Device \
--IUSBDevice/Class/CDC \
--IUSBDevice/Class/DFU \
--IUSBDevice/Class/HID \
--IUSBDevice/Class/MSC \
--ISTM32_XPD/CMSIS/Include \
--IUSBDevice/PDs/STM32_XPD \
--ISTM32_XPD/CMSIS/Device/ST/$(SERIES)xx/Include \
--ISTM32_XPD/$(SERIES)_XPD/inc
+-I$(USBD_DIR)/Device \
+-I$(USBD_DIR)/Class/CDC \
+-I$(USBD_DIR)/Class/DFU \
+-I$(USBD_DIR)/Class/HID \
+-I$(USBD_DIR)/Class/MSC \
+-I$(USBD_DIR)/PDs/STM32_XPD \
+-I$(XPD_DIR)/CMSIS/Include \
+-I$(XPD_DIR)/CMSIS/Device/ST/$(SERIES)xx/Include \
+-I$(XPD_DIR)/$(SERIES)_XPD/inc
 
 # C sources
 C_SOURCES =  \
 $(wildcard $(BSP)/*.c) \
 $(wildcard Main/*.c) \
-$(wildcard USBDevice/Device/Src/*.c) \
-$(wildcard USBDevice/Class/CDC/Src/*.c) \
-$(wildcard USBDevice/Class/DFU/Src/*.c) \
-$(wildcard USBDevice/Class/HID/Src/*.c) \
-$(wildcard USBDevice/Class/MSC/Src/*.c) \
-$(wildcard STM32_XPD/$(SERIES)_XPD/src/*.c)
+$(wildcard $(USBD_DIR)/Device/Src/*.c) \
+$(wildcard $(USBD_DIR)/Class/CDC/Src/*.c) \
+$(wildcard $(USBD_DIR)/Class/DFU/Src/*.c) \
+$(wildcard $(USBD_DIR)/Class/HID/Src/*.c) \
+$(wildcard $(USBD_DIR)/Class/MSC/Src/*.c) \
+$(wildcard $(XPD_DIR)/$(SERIES)_XPD/src/*.c)
 
 # compiler flags
 CFLAGS = $(MCU) $(C_DEFS) $(C_INCLUDES) $(OPT) -Wall -fdata-sections -ffunction-sections $(C_STANDARD)
