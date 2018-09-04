@@ -118,10 +118,7 @@ C_INCLUDES =  \
 -I$(BSP) \
 -IMain \
 -I$(USBD_DIR)/Device \
--I$(USBD_DIR)/Class/CDC \
 -I$(USBD_DIR)/Class/DFU \
--I$(USBD_DIR)/Class/HID \
--I$(USBD_DIR)/Class/MSC \
 -I$(USBD_DIR)/PDs/STM32_XPD \
 -I$(XPD_DIR)/CMSIS/Include \
 -I$(XPD_DIR)/CMSIS/Device/ST/$(SERIES)xx/Include \
@@ -132,10 +129,7 @@ C_SOURCES =  \
 $(wildcard $(BSP)/*.c) \
 $(wildcard Main/*.c) \
 $(wildcard $(USBD_DIR)/Device/Src/*.c) \
-$(wildcard $(USBD_DIR)/Class/CDC/Src/*.c) \
 $(wildcard $(USBD_DIR)/Class/DFU/Src/*.c) \
-$(wildcard $(USBD_DIR)/Class/HID/Src/*.c) \
-$(wildcard $(USBD_DIR)/Class/MSC/Src/*.c) \
 $(wildcard $(XPD_DIR)/$(SERIES)_XPD/src/*.c)
 
 # compiler flags
