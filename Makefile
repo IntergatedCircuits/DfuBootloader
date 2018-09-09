@@ -117,8 +117,7 @@ USBD_DIR = USBDevice
 C_INCLUDES =  \
 -I$(BSP) \
 -IMain \
--I$(USBD_DIR)/Device \
--I$(USBD_DIR)/Class/DFU \
+-I$(USBD_DIR)/Include \
 -I$(USBD_DIR)/PDs/STM32_XPD \
 -I$(XPD_DIR)/CMSIS/Include \
 -I$(XPD_DIR)/CMSIS/Device/ST/$(SERIES)xx/Include \
@@ -128,8 +127,8 @@ C_INCLUDES =  \
 C_SOURCES =  \
 $(wildcard $(BSP)/*.c) \
 $(wildcard Main/*.c) \
-$(wildcard $(USBD_DIR)/Device/Src/*.c) \
-$(wildcard $(USBD_DIR)/Class/DFU/Src/*.c) \
+$(wildcard $(USBD_DIR)/Device/*.c) \
+$(wildcard $(USBD_DIR)/Class/DFU/*.c) \
 $(wildcard $(XPD_DIR)/$(SERIES)_XPD/src/*.c)
 
 # compiler flags
