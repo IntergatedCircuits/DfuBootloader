@@ -170,10 +170,10 @@ static int FlashIf_AppHeaderValid(void)
 static int FlashIf_AppSignValid(void)
 {
     /* The last word of the application is set to fixed value during manifestation */
-    uint32_t* flashEnd = ((uint32_t*)(FLASH_BASE + FLASH_APP_SIZE
+    uint32_t* appEnd = ((uint32_t*)(FLASH_APP_ADDRESS + FLASH_APP_SIZE
             - sizeof(FLASH_VALID_SYMBOL)));
 
-    return (*flashEnd == FLASH_VALID_SYMBOL);
+    return (*appEnd == FLASH_VALID_SYMBOL);
 }
 
 /**
@@ -183,8 +183,8 @@ static int FlashIf_AppSignValid(void)
 static USBD_DFU_StatusType FlashIf_Manifest(void)
 {
     USBD_DFU_StatusType retval = DFU_ERROR_NONE;
-    uint32_t* addr = (uint32_t*)(FLASH_BASE
-            + (DEVICE_FLASH_SIZE_kB << 10) - sizeof(manifSign));
+    uint32_t* pmanif = ((uint32_t*)(FLASH_APP_ADDRESS + FLASH_APP_SIZE
+            - sizeof(manifSign)));
 
     if (!FlashIf_AppHeaderValid())
     {
@@ -194,7 +194,7 @@ static USBD_DFU_StatusType FlashIf_Manifest(void)
     {
         /* Skip rewrite of manifest */
     }
-    else if (XPD_OK != FLASH_eProgram(addr,
+    else if (XPD_OK != FLASH_eProgram(pmanif,
             (const uint8_t*)&manifSign, sizeof(manifSign)))
     {
         retval = DFU_ERROR_PROG;
