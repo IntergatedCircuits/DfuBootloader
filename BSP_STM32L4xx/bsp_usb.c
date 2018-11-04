@@ -20,11 +20,13 @@
   * See the License for the specific language governing permissions and
   * limitations under the License.
   */
+#include <xpd_pwr.h>
 #include <bsp_io.h>
 #include <bsp_usb.h>
 
 void BSP_USB_Bind(USB_HandleType *dev)
 {
+    PWR_vVddUSB(ENABLE);
     GPIO_vInitPin(USB_DM_PIN, USB_DM_CFG);
     GPIO_vInitPin(USB_DP_PIN, USB_DP_CFG);
 
