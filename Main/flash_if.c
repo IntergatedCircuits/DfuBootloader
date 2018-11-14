@@ -183,22 +183,6 @@ static int FlashIf_AppSignValid(void)
 static USBD_DFU_StatusType FlashIf_Manifest(void)
 {
     USBD_DFU_StatusType retval = DFU_ERROR_NONE;
-    uint32_t* pmanif = ((uint32_t*)(FLASH_APP_ADDRESS + FLASH_APP_SIZE
-            - sizeof(manifSign)));
-
-    if (!FlashIf_AppHeaderValid())
-    {
-        retval = DFU_ERROR_VERIFY;
-    }
-    else if (FlashIf_AppSignValid())
-    {
-        /* Skip rewrite of manifest */
-    }
-    else if (XPD_OK != FLASH_eProgram(pmanif,
-            (const uint8_t*)&manifSign, sizeof(manifSign)))
-    {
-        retval = DFU_ERROR_PROG;
-    }
     return retval;
 }
 
@@ -228,6 +212,6 @@ const USBD_DFU_AppType hflash_if = {
 #else
     .Erase              = FlashIf_Erase,
     .GetTimeout_ms      = FlashIf_GetTimeout_ms,
-    .Name               = "DFU Bootloader",
+    .Name               = "DFU Updater",
 #endif
 }, *const flash_if = &hflash_if;

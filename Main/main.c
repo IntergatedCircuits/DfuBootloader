@@ -37,13 +37,13 @@ const USBD_DescriptionType hdev_cfg = {
             .ID             = USBD_VID,
     },
     .Product = {
-            .Name           = "DFU Bootloader",
+            .Name           = "DFU Updater",
             .ID             = USBD_PID,
             .Version.bcd    = 0x0100,
     },
     .SerialNumber = (USBD_SerialNumberType*)DEVICE_ID_REG,
     .Config = {
-            .Name           = "DFU Bootloader",
+            .Name           = "DFU Updater",
             .MaxCurrent_mA  = 100,
             .RemoteWakeup   = 0,
             .SelfPowered    = 0,
@@ -56,6 +56,13 @@ USBD_HandleType husbd, *const usbd = &husbd;
 USBD_DFU_IfHandleType __attribute__((section (".dfuSharedSection"))) hdfu_if;
 USBD_DFU_IfHandleType *const dfu_if = &hdfu_if;
 
+static void reboot(void)
+{
+    dfu_if->Tag[0] = DFU_MODE_TAG;
+    dfu_if->Tag[1] = ~DFU_MODE_TAG;
+    NVIC_SystemReset();
+}
+
 /**
  * @brief This function resets the device to known initial state,
  *        determines and starts the boot target (bootloader / application)
@@ -66,22 +73,11 @@ int main(void)
     /* Reset hardware to default state */
     XPD_vDeinit();
     RCC_vDeinit();
+    dfu_if->Tag[0] = 0;
 
     /* As the DFU interface is used by the application as well,
      * initialize it before going anywhere */
-    USBD_DFU_BootInit(dfu_if, (USBD_DFU_RebootCbkType)NVIC_SystemReset, flash_if, 1);
-
-    /* Enter App when DFU isn't requested and App is present */
-    if (!USBD_DFU_IsRequested(dfu_if) && FlashIf_ApplicationPresent())
-    {
-        void (*runApplication)(void) = *((const void **)(FLASH_APP_ADDRESS + 4));
-
-        /* Set the main stack pointer */
-        __set_MSP(*((uint32_t *)FLASH_APP_ADDRESS));
-
-        /* Jump to application */
-        runApplication();
-    }
+    USBD_DFU_BootInit(dfu_if, reboot, flash_if, 1);
 
     /* Otherwise start bootloader */
     XPD_vInit();
