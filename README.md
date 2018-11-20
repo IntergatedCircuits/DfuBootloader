@@ -31,7 +31,10 @@ An example for an STM32F042K6 device with (VID,PID)={FFFF,FFFF}:
 
 `make TARGET_HEADER="\<stm32f042x6.h\>" SERIES=STM32F0 APP_ADDRESS=0x08002000 APP_SIZE=24568 TOTAL_ERASE_MS=480 VID=FFFF PID=FFFF`
 
-Built with arm-atollic-eabi- tools (arm-none-eabi- doesn't provide enough optimization to fit in 8kB flash).
+Further examples can be found in `.travis.yml`.
+
+Built with GCC.
+(arm-atollic-eabi- is preferred over arm-none-eabi- as it provides better size optimization)
 
 [STM32_XPD]: https://github.com/IntergatedCircuits/STM32_XPD
 [USBDevice]: https://github.com/IntergatedCircuits/USBDevice
