@@ -57,5 +57,8 @@ void SystemClock_Config(void)
     RCC_eHCLK_Config(PLL, CLK_DIV1, 1);
 #endif
 
+    /* System clocks configuration is the default, optimize calls */
+#if 0
     RCC_vPCLK1_Config(CLK_DIV1);
+#endif
 }
