@@ -30,9 +30,9 @@ extern "C"
 
 #include <xpd_gpio.h>
 
-#define USB_DP_PIN          GPIOA, 12
-#define USB_DM_PIN          GPIOA, 11
-#define USB_VBUS_PIN        GPIOA, 9
+#define USB_DP_PIN          PA12
+#define USB_DM_PIN          PA11
+#define USB_VBUS_PIN        PA9
 #define USB_DP_CFG          (&BSP_IOCfg[0])
 #define USB_DM_CFG          (&BSP_IOCfg[0])
 #define USB_VBUS_CFG        (&BSP_IOCfg[0])
