@@ -11,7 +11,7 @@ before_install:
 
 script:
 - docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f072xb.h\>" SERIES=STM32F0 APP_ADDRESS=0x08002000 APP_SIZE=120*1024 TOTAL_ERASE_MS=4000 VID=FFFF PID=F072
-- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f302xc.h\>" SERIES=STM32F3 APP_ADDRESS=0x08002000 APP_SIZE=120*1024 TOTAL_ERASE_MS=4000 VID=FFFF PID=F302 HSE_HZ=12000000 DP_PIN="GPIOA,9"
+- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f302xc.h\>" SERIES=STM32F3 APP_ADDRESS=0x08002000 APP_SIZE=120*1024 TOTAL_ERASE_MS=4000 VID=FFFF PID=F302 HSE_HZ=12000000 DP_PIN="PA9"
 # the following targets only fit in 8kB flash when compiled with PREFIX=arm-atollic-eabi-
 #- docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32f407xx.h\>" SERIES=STM32F4 APP_ADDRESS=0x08004000 APP_SIZE=1008*1024 TOTAL_ERASE_MS=16000 VID=FFFF PID=F407 VDD_MV=3000 HSE_HZ=8000000
 - docker run -v $PWD:/my_files_in_docker --entrypoint /usr/bin/make jumperio/vlab-gcc-arm -C my_files_in_docker TARGET_HEADER="\<stm32l476xx.h\>" SERIES=STM32L4 APP_ADDRESS=0x08002000 APP_SIZE=1016*1024 TOTAL_ERASE_MS=12000 VID=FFFF PID=1476
