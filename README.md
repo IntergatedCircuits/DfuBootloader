@@ -9,6 +9,7 @@ This repository contains a generic USB device bootloader firmware for STM32 cont
 * The DFU interface is allocated to a fixed address, so it can be mounted on the application's USB device,
   allowing convenient entry to firmware update mode
 * Easy to port on virtually any STM32 device that is supported by [STM32_XPD][STM32_XPD]
+* C# CLI application available for performing the update: [LibUsbDfu][LibUsbDfu]
 
 ## How to build
 
@@ -39,3 +40,4 @@ Built with GCC.
 [STM32_XPD]: https://github.com/IntergatedCircuits/STM32_XPD
 [USBDevice]: https://github.com/IntergatedCircuits/USBDevice
 [DFUSE]: www.st.com/resource/en/application_note/cd00264379.pdf
+[LibUsbDfu]: https://github.com/IntergatedCircuits/LibUsbDfu
