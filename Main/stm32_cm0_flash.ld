@@ -84,7 +84,7 @@ SECTIONS
   } >FLASH
 
   /* RAM variables for DFU */
-  .shared_ram 0x200000C0 :
+  .shared_ram 0x200000C0 (NOLOAD):
   {
     KEEP(*(.dfuSharedSection))
   } >RAM
